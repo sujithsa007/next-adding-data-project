@@ -14,7 +14,6 @@ const MeetupDetails = (props) => {
 };
 
 export async function getStaticPaths() {
-  
   const client = await MongoClient.connect(
     "mongodb+srv://sujith:MaBFBy3dMGAj4EPF@cluster0.s6pyt.mongodb.net/meetups?retryWrites=true&w=majority"
   );
@@ -27,7 +26,7 @@ export async function getStaticPaths() {
   client.close();
 
   return {
-    fallback: false,
+    fallback: "blocking", //or true will return empty page and pull down the dynamically generated data, blocked will wait till everything finishes and then loads
     paths: meetups.map((meetup) => ({
       params: { meetupId: meetup._id.toString() },
     })),
@@ -35,9 +34,8 @@ export async function getStaticPaths() {
 }
 
 export async function getStaticProps(context) {
-  
   const meetupId = context.params.meetupId;
-  
+
   const client = await MongoClient.connect(
     "mongodb+srv://sujith:MaBFBy3dMGAj4EPF@cluster0.s6pyt.mongodb.net/meetups?retryWrites=true&w=majority"
   );
